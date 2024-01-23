@@ -10,7 +10,7 @@ import asyncio
 import time
 async def play():
     playsound('notes/A0.wav', block=True)
-    # await asyncio.sleep(1)
+    # await asyncio.sleep(0.5)
     playsound('notes/A0.wav', block=True)
 
     print("Audio playback finished.")
