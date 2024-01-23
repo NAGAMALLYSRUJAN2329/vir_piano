@@ -71,7 +71,7 @@ n=2
 pts=np.array([[[100,350]],[[700,350]],[[700,550]],[[100,550]]])
 button_x,button_y,button_l,button_w=[600,75,50,50]
 
-
+last_pressed_key=None
 white_piano_notes,black_piano_notes=get_piano_notes(2)
 previousTime=0
 configure_piano=False
@@ -100,11 +100,12 @@ while True:
             frame,pts,configure_piano=piano_config(frame,pts,configure_piano,x[4],y[4],x[8],y[8],button_x,button_y,button_l,button_w)
             if not configure_piano:
                 pressed_key=check_key(x[8],y[8],white_lines,black_lines)
-                if pressed_key:
+                if pressed_key and pressed_key!=last_pressed_key:
                     if pressed_key[0]=="Black":
                         play_piano_sound([black_piano_notes[pressed_key[1]]])
                     else:
                         play_piano_sound([white_piano_notes[pressed_key[1]]])
+                last_pressed_key=pressed_key
     else:
         frame,pts,configure_piano=piano_config(frame,pts,configure_piano,20,20,50,50,button_x,button_y,button_l,button_w)
 
