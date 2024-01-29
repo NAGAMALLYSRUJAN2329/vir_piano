@@ -121,6 +121,7 @@ def get_slope_and_intercept(x0,y0,x1,y1):
         m=(y1-y0)/(x1-x0) # there will zero division error
     else:
         m=10000
+        # m=y1-y0
     b=y1-m*x1
     return m,b
 
@@ -158,23 +159,68 @@ def point_and_line(m,b,x,y):
     else:
         return False
 
-def check_key(x,y,white_lines,black_lines):
-    for i,key in enumerate(black_lines):
-        [[[m0,b0]],[[m1,b1]],[[m2,b2]],[[m3,b3]]]=key
-        if point_and_line(m0,b0,x,y) ^ point_and_line(m2,b2,x,y) and point_and_line(m1,b1,x,y) ^ point_and_line(m3,b3,x,y):
-            print("Black ",i)
-            return ("Black",i)
-    for i,key in enumerate(white_lines):
-        [[[m0,b0]],[[m1,b1]],[[m2,b2]],[[m3,b3]]]=key
-        if point_and_line(m0,b0,x,y) ^ point_and_line(m2,b2,x,y) and point_and_line(m1,b1,x,y) ^ point_and_line(m3,b3,x,y):
-            print("White ",i)
-            return ("White",i)
-    return None
+def check_key(x,y,white_lines,black_lines,white_piano_notes,black_piano_notes):
+    keys_to_check=[4,8,12,16,20]
+    # keys_to_check=[8]
+    pressed_keys=[]
+    another_pressed_keys={"White":[],"Black":[]}
+    for key_to_check in keys_to_check:
+        x1,y1=x[key_to_check],y[key_to_check]
+        flag=False
+        for i,key in enumerate(black_lines):
+            [[[m0,b0]],[[m1,b1]],[[m2,b2]],[[m3,b3]]]=key
+            # try:
+            #     distance=cv2.pointPolygonTest(black_lines[i],(x1,y1), measureDist=True)
+            #     print(distance)
+            # except Exception as e:
+            #     print(e)
+            # distance = cv2.pointPolygonTest(np.array(key), (x1,y1), measureDist=True)
+            if point_and_line(m0,b0,x1,y1) ^ point_and_line(m2,b2,x1,y1) and point_and_line(m1,b1,x1,y1) ^ point_and_line(m3,b3,x1,y1):
+            # if distance>0:
+                # print("Black ",i)
+                another_pressed_keys['Black'].append(i)
+                pressed_keys.append(black_piano_notes[i])
+                flag=True
+                break
+        # print("Hi")
+        if flag:
+            continue
+        for i,key in enumerate(white_lines):
+            [[[m0,b0]],[[m1,b1]],[[m2,b2]],[[m3,b3]]]=key
+            # distance = cv2.pointPolygonTest(np.array(key), (x1,y1), measureDist=True)
+            if point_and_line(m0,b0,x1,y1) ^ point_and_line(m2,b2,x1,y1) and point_and_line(m1,b1,x1,y1) ^ point_and_line(m3,b3,x1,y1):
+            # if distance>0:
+                # print("White ",i)
+                another_pressed_keys['White'].append(i)
+                pressed_keys.append(white_piano_notes[i])
+                break
+        pressed_keys=list(set(pressed_keys))
+        another_pressed_keys['White']=list(set(another_pressed_keys['White']))
+        another_pressed_keys['Black']=list(set(another_pressed_keys['Black']))
+    return pressed_keys,another_pressed_keys
 
 def call_back(event,x,y,flags,param):
     if event == cv2.EVENT_RBUTTONDOWN:
         print(x,y)
         check_key(x,y,white_lines,black_lines)
+
+def hand_mask(frame,frame_copy):
+    im_ycrcb = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2YCR_CB)
+    mask = np.zeros_like(frame_copy)
+    skin_ycrcb_mint = np.array((0, 133, 77))
+    skin_ycrcb_maxt = np.array((255, 173, 127))
+    skin_ycrcb = cv2.inRange(im_ycrcb, skin_ycrcb_mint, skin_ycrcb_maxt)
+    contours, _ = cv2.findContours(skin_ycrcb, cv2.RETR_EXTERNAL, 
+            cv2.CHAIN_APPROX_SIMPLE)
+    for i, c in enumerate(contours):
+        area = cv2.contourArea(c)
+        if area > 1000:
+            cv2.drawContours(mask, contours, i, (255, 255, 255), -1)
+            cv2.drawContours(frame, contours, i, (0, 0, 0), -1)
+    result = cv2.bitwise_and(frame_copy,mask)
+    result=cv2.add(frame,result)
+    return result
+
 
 if __name__=='__main__':
     shape=(800,600)
