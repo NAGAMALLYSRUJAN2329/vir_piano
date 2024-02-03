@@ -98,16 +98,15 @@ while True:
             x,y,z=modify(x,y,z)
 
             frame,pts,configure_piano=piano_config(frame,pts,configure_piano,x[4],y[4],x[8],y[8],button_x,button_y,button_l,button_w)
+            frame,pts,configure_piano=piano_config(frame,pts,configure_piano,x[4],y[4],x[8],y[8],button_x,button_y,button_l,button_w)
             if not configure_piano:
-                pressed_key= check_key(x,y,white_lines,black_lines,white_piano_notes,black_piano_notes)
+                pressed_key=check_key(x[8],y[8],white_lines,black_lines)
                 if pressed_key and pressed_key!=last_pressed_key:
                     if pressed_key[0]=="Black":
-                        play_piano_sound(pressed_key[0])
+                        play_piano_sound([black_piano_notes[pressed_key[1]]])
                     else:
-                        play_piano_sound(pressed_key[0])
-                last_pressed_key=pressed_key[0]
-    else:
-        frame,pts,configure_piano=piano_config(frame,pts,configure_piano,20,20,50,50,button_x,button_y,button_l,button_w)
+                        play_piano_sound([white_piano_notes[pressed_key[1]]])
+                last_pressed_key=pressed_key
 
     currentTime = time.time()
     fps = 1 / (currentTime - previousTime)
