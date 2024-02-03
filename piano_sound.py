@@ -1,7 +1,7 @@
 import pygame
 
 def play_piano_sound(notes):
-    file_paths=[f"notes\{note}.wav" for note in notes]
+    file_paths=[f"cut_notes\{note}.wav" for note in notes]
     pygame.display.set_caption('')
     pygame.mixer.init()
     pygame.mixer.stop()

@@ -158,6 +158,45 @@ def point_and_line(m,b,x,y):
         return True
     else:
         return False
+def check_key2(x1,y1,white_lines,black_lines,white_piano_notes,black_piano_notes):
+    # keys_to_check=[4,8,12,16,20]
+    # # keys_to_check=[8]
+        pressed_keys=[]
+        another_pressed_keys={"White":[],"Black":[]}
+    # for key_to_check in keys_to_check:
+    #     x1,y1=x[key_to_check],y[key_to_check]
+        flag=False
+        for i,key in enumerate(black_lines):
+            [[[m0,b0]],[[m1,b1]],[[m2,b2]],[[m3,b3]]]=key
+            # try:
+            #     distance=cv2.pointPolygonTest(black_lines[i],(x1,y1), measureDist=True)
+            #     print(distance)
+            # except Exception as e:
+            #     print(e)
+            # distance = cv2.pointPolygonTest(np.array(key), (x1,y1), measureDist=True)
+            if point_and_line(m0,b0,x1,y1) ^ point_and_line(m2,b2,x1,y1) and point_and_line(m1,b1,x1,y1) ^ point_and_line(m3,b3,x1,y1):
+            # if distance>0:
+                # print("Black ",i)
+                another_pressed_keys['Black'].append(i)
+                pressed_keys.append(black_piano_notes[i])
+                flag=True
+                break
+        # print("Hi")
+        # if flag:
+        #     continue
+        for i,key in enumerate(white_lines):
+            [[[m0,b0]],[[m1,b1]],[[m2,b2]],[[m3,b3]]]=key
+            # distance = cv2.pointPolygonTest(np.array(key), (x1,y1), measureDist=True)
+            if point_and_line(m0,b0,x1,y1) ^ point_and_line(m2,b2,x1,y1) and point_and_line(m1,b1,x1,y1) ^ point_and_line(m3,b3,x1,y1):
+            # if distance>0:
+                # print("White ",i)
+                another_pressed_keys['White'].append(i)
+                pressed_keys.append(white_piano_notes[i])
+                break
+        pressed_keys=list(set(pressed_keys))
+        another_pressed_keys['White']=list(set(another_pressed_keys['White']))
+        another_pressed_keys['Black']=list(set(another_pressed_keys['Black']))
+        return pressed_keys,another_pressed_keys
 
 def check_key(x,y,white_lines,black_lines,white_piano_notes,black_piano_notes):
     keys_to_check=[4,8,12,16,20]
