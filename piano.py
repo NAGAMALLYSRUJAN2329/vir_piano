@@ -88,7 +88,7 @@ while True:
 
     white,black=make_keyboard(frame,pts,n)
     white_lines,black_lines=convert_coordinates_to_lines(white,black)
-    
+
     if results.multi_hand_landmarks:
         for hand_landmark in results.multi_hand_landmarks:
             x,y,z=[],[],[]
@@ -98,6 +98,7 @@ while True:
             x,y,z=modify(x,y,z)
 
             frame,pts,configure_piano=piano_config(frame,pts,configure_piano,x[4],y[4],x[8],y[8],button_x,button_y,button_l,button_w)
+            frame,pts,configure_piano=piano_config(frame,pts,configure_piano,x[4],y[4],x[8],y[8],button_x,button_y,button_l,button_w)
             if not configure_piano:
                 pressed_key=check_key(x[8],y[8],white_lines,black_lines)
                 if pressed_key and pressed_key!=last_pressed_key:
@@ -106,8 +107,6 @@ while True:
                     else:
                         play_piano_sound([white_piano_notes[pressed_key[1]]])
                 last_pressed_key=pressed_key
-    else:
-        frame,pts,configure_piano=piano_config(frame,pts,configure_piano,20,20,50,50,button_x,button_y,button_l,button_w)
 
     currentTime = time.time()
     fps = 1 / (currentTime - previousTime)
