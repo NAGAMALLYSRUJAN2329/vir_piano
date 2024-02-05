@@ -27,6 +27,7 @@ def get_coordinates(model_path,shape,distance_threshold):
         frame = cv2.flip(frame, 1)
         hd.detect(frame)
         frame=circle_fingertips(frame,hd.x,hd.y)
+        cv2.namedWindow("Piano Configuration", cv2.WINDOW_NORMAL)
         cv2.imshow('Piano Configuration',frame)
         cv2.waitKey(1)
         if len(hd.x)==2:
