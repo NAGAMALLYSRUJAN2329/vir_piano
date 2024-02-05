@@ -2,11 +2,13 @@ import cv2
 import numpy as np
 
 class Piano():
-    def __init__(self,pts,num_octaves):
+    def __init__(self,pts,num_octaves,height_and_width=[[5,8],[5,8]]):
         self.pts=pts
         self.num_octaves=num_octaves
         self.white=[]
         self.black=[]
+        self.height_of_black=height_and_width[0]
+        self.width_of_black=height_and_width[1]
         self.get_keyboard_keys()
 
     def section_formula(self,x1,y1,x2,y2,m,n):
@@ -55,17 +57,23 @@ class Piano():
                 continue
             temp=np.zeros((4,1,2), dtype=np.int32)
             xy_coords=np.zeros((4,1,2), dtype=np.int32)
-            x,y=self.section_formula(last_x_,last_y_,x_,y_,11,5)
+            # black to be 5/8 times (width) of white key so n=5 and d=8
+            n=self.width_of_black[0]
+            d=self.width_of_black[1]
+            x,y=self.section_formula(last_x_,last_y_,x_,y_,2*d-n,n)
             temp[3][0]=[x,y]
-            x,y=self.section_formula(last_x_up,last_y_up,x_up,y_up,11,5)
+            x,y=self.section_formula(last_x_up,last_y_up,x_up,y_up,2*d-n,n)
             xy_coords[0][0]=[x,y]
-            x,y=self.section_formula(last_x_,last_y_,x_,y_,21,-5)
+            x,y=self.section_formula(last_x_,last_y_,x_,y_,2*d+n,-n)
             temp[2][0]=[x,y]
-            x,y=self.section_formula(last_x_up,last_y_up,x_up,y_up,21,-5)
+            x,y=self.section_formula(last_x_up,last_y_up,x_up,y_up,2*d+n,-n)
             xy_coords[1][0]=[x,y]
-            x,y=self.section_formula(temp[2][0][0],temp[2][0][1],xy_coords[1][0][0],xy_coords[1][0][1],5,3)
+            # black to be 5/8 times (height) of white key so n_=5 and d_=8
+            n_=self.height_of_black[0]
+            d_=self.height_of_black[1]
+            x,y=self.section_formula(temp[2][0][0],temp[2][0][1],xy_coords[1][0][0],xy_coords[1][0][1],n_,d_-n_)
             temp[1][0]=[x,y]
-            x,y=self.section_formula(temp[3][0][0],temp[3][0][1],xy_coords[0][0][0],xy_coords[0][0][1],5,3)
+            x,y=self.section_formula(temp[3][0][0],temp[3][0][1],xy_coords[0][0][0],xy_coords[0][0][1],n_,d_-n_)
             temp[0][0]=[x,y]
             last_x_up,last_y_up=x_up,y_up
             last_x_,last_y_=x_,y_
@@ -88,17 +96,23 @@ class Piano():
         xy_coords=np.zeros((4,1,2), dtype=np.int32)
         x_,y_=self.section_formula(x3,y3,x2,y2,1,1)
         x_up,y_up=self.section_formula(x0,y0,x1,y1,1,1)
-        x,y=self.section_formula(x3,y3,x_,y_,11,5)
+        # black to be 5/8 times (width) white key so n=5 and d=8
+        n=self.width_of_black[0]
+        d=self.width_of_black[1]
+        x,y=self.section_formula(x3,y3,x_,y_,2*d-n,n)
         temp[3][0]=[x,y]
-        x,y=self.section_formula(x0,y0,x_up,y_up,11,5)
+        x,y=self.section_formula(x0,y0,x_up,y_up,2*d-n,n)
         xy_coords[0][0]=[x,y]
-        x,y=self.section_formula(x3,y3,x_,y_,21,-5)
+        x,y=self.section_formula(x3,y3,x_,y_,2*d+n,-n)
         temp[2][0]=[x,y]
-        x,y=self.section_formula(x0,y0,x_up,y_up,21,-5)
+        x,y=self.section_formula(x0,y0,x_up,y_up,2*d+n,-n)
         xy_coords[1][0]=[x,y]
-        x,y=self.section_formula(temp[2][0][0],temp[2][0][1],xy_coords[1][0][0],xy_coords[1][0][1],5,3)
+        # black to be 5/8 times (height) of white key so n_=5 and d_=8
+        n_=self.height_of_black[0]
+        d_=self.height_of_black[1]
+        x,y=self.section_formula(temp[2][0][0],temp[2][0][1],xy_coords[1][0][0],xy_coords[1][0][1],n_,d_-n_)
         temp[1][0]=[x,y]
-        x,y=self.section_formula(temp[3][0][0],temp[3][0][1],xy_coords[0][0][0],xy_coords[0][0][1],5,3)
+        x,y=self.section_formula(temp[3][0][0],temp[3][0][1],xy_coords[0][0][0],xy_coords[0][0][1],n_,d_-n_)
         temp[0][0]=[x,y]
         self.black.append(temp)
 

@@ -4,31 +4,32 @@ import time
 
 from keyboard import Piano
 from piano_config import piano_configuration
-from hand_detection import Hands_detection
+from hand_detection2 import Hands_detection
 from check_key import check_keys,tap_detection
 from piano_sound import play_piano_sound
 from top_view import top_view
 
 
-SHAPE=(800,600,3)
-
 class VirPiano():
-    def __init__(self,model_path):
+    def __init__(self,model_path='model/hand_landmarker.task',num_octaves=2,list_of_octaves=[3,4],shape=(800,600,3),tap_threshold=20,piano_config_threshold=30):
         self.model_path=model_path
         self.hand_detection=Hands_detection(self.model_path)
-        self.shape=SHAPE
+        self.shape=shape
         self.image=np.zeros(self.shape, np.uint8)
-        self.num_octaves=2
-        self.list_of_octaves=[3,4]
+        self.num_octaves=num_octaves
+        self.list_of_octaves=list_of_octaves
+        self.tap_threshold=tap_threshold
+        self.piano_config_threshold=piano_config_threshold
         self.pts=np.array([[[100,350]],[[700,350]],[[700,550]],[[100,550]]])
         self.piano_keyboard=Piano(self.pts,self.num_octaves)
-        self.piano_config=False
+        self.piano_config=True
         self.x=[]
         self.y=[]
         self.z=[]
         self.previous_x=[]
         self.previous_y=[]
         self.white_piano_notes,self.black_piano_notes=self.get_piano_notes()
+        self.start()
 
     def get_piano_notes(self):
         white_piano_notes=['A0','B0']
@@ -62,9 +63,8 @@ class VirPiano():
             frame = cv2.flip(frame, 1)
 
             while self.piano_config:
-                self.pts=piano_configuration(self.model_path,self.shape)
+                self.pts=piano_configuration(self.model_path,self.shape,self.piano_config_threshold)
                 self.piano_keyboard=Piano(self.pts,self.num_octaves)
-                # print(self.pts)
                 self.piano_config=False
                 cap=cv2.VideoCapture(0)
 
@@ -80,7 +80,7 @@ class VirPiano():
             pressed_notes=[]
             if len(self.previous_x)==len(self.x):
                 for (x_,y_),(previous_x_,previous_y_) in zip(zip(self.x,self.y),zip(self.previous_x,self.previous_y)):
-                    tapped_keys=tap_detection(previous_x_,previous_y_,x_,y_)
+                    tapped_keys=tap_detection(previous_x_,previous_y_,x_,y_,self.tap_threshold)
                     keys,notes=check_keys(x_,y_,self.piano_keyboard.white,self.piano_keyboard.black,self.white_piano_notes,self.black_piano_notes,tapped_keys)
                     for note in notes:
                         pressed_notes.append(note)
@@ -122,6 +122,4 @@ class VirPiano():
         cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    model_path = 'hand_landmarker.task'
-    vp=VirPiano(model_path)
-    vp.start()
+    vp=VirPiano()

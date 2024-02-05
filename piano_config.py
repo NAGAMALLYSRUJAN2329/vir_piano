@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 
-from hand_detection import Hands_detection
+from hand_detection2 import Hands_detection
 
 
 def circle_fingertips(img,x,y):
@@ -18,7 +18,7 @@ def circle_fingertips(img,x,y):
             img=cv2.polylines(img,[np.array(pts,dtype=np.int32)],True,color,2)
         return img
 
-def get_coordinates(model_path,shape):
+def get_coordinates(model_path,shape,distance_threshold):
     hd=Hands_detection(model_path)
     cap1=cv2.VideoCapture(0)
     while True:
@@ -30,7 +30,6 @@ def get_coordinates(model_path,shape):
         cv2.imshow('Piano Configuration',frame)
         cv2.waitKey(1)
         if len(hd.x)==2:
-            # print('0')
             [thumb_x0,thumb_y0] = hd.x[0][4],hd.y[0][4]
             [thumb_x1,thumb_y1] = hd.x[1][4],hd.y[1][4]
             [forefinger_x0,forefinger_y0] = hd.x[0][8],hd.y[0][8]
@@ -39,13 +38,12 @@ def get_coordinates(model_path,shape):
             [middlefinger_x1,middlefinger_y1] = hd.x[1][12],hd.y[1][12]
             distance0 = cv2.norm(np.array((forefinger_x0,forefinger_y0)), np.array((middlefinger_x0,middlefinger_y0)), cv2.NORM_L2)
             distance1 = cv2.norm(np.array((forefinger_x1,forefinger_y1)), np.array((middlefinger_x1,middlefinger_y1)), cv2.NORM_L2)
-            if distance1 < 30 and distance0 < 30:
+            if distance1 < distance_threshold and distance0 < distance_threshold:
                 pts=[[[thumb_x0,thumb_y0]],[[thumb_x1,thumb_y1]],[[forefinger_x1,forefinger_y1]],[[forefinger_x0,forefinger_y0]]]
                 cap1.release()
                 cv2.destroyAllWindows()
                 return pts
 
-def piano_configuration(model_path,shape):
-    pts=get_coordinates(model_path,shape)
-    # pts=np.array([[[100,350]],[[700,350]],[[700,550]],[[100,550]]])
+def piano_configuration(model_path,shape,distance_threshold):
+    pts=get_coordinates(model_path,shape,distance_threshold)
     return pts

@@ -5,10 +5,9 @@ import numpy as np
 def calculate_distance(point1, point2):
     return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
 
-def tap_detection(previous_x,previous_y,x,y):
+def tap_detection(previous_x,previous_y,x,y,threshold):
     keys_to_check=[4,8,12,16,20]
     tapped_keys=[]
-    threshold=20
     for key in keys_to_check:
         # dis=calculate_distance((x[key],y[key]),(previous_x[key],previous_y[key]))
         dis=y[key]-previous_y[key]
