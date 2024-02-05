@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 import time
+import argparse
+import ast
 
 from keyboard import Piano
 from piano_config import piano_configuration
@@ -11,18 +13,19 @@ from top_view import top_view
 
 
 class VirPiano():
-    def __init__(self,model_path='model/hand_landmarker.task',num_octaves=2,list_of_octaves=[3,4],shape=(800,600,3),tap_threshold=20,piano_config_threshold=30):
+    def __init__(self,model_path='model/hand_landmarker.task',num_octaves=2,list_of_octaves=[3,4],height_and_width_black=[[5,8],[5,8]],shape=(800,600,3),tap_threshold=20,piano_config_threshold=30,piano_config=1):
         self.model_path=model_path
         self.hand_detection=Hands_detection(self.model_path)
         self.shape=shape
         self.image=np.zeros(self.shape, np.uint8)
         self.num_octaves=num_octaves
         self.list_of_octaves=list_of_octaves
+        self.height_and_width_black=height_and_width_black
         self.tap_threshold=tap_threshold
         self.piano_config_threshold=piano_config_threshold
         self.pts=np.array([[[100,350]],[[700,350]],[[700,550]],[[100,550]]])
-        self.piano_keyboard=Piano(self.pts,self.num_octaves)
-        self.piano_config=True
+        self.piano_keyboard=Piano(self.pts,self.num_octaves,self.height_and_width_black)
+        self.piano_config=piano_config
         self.x=[]
         self.y=[]
         self.z=[]
@@ -62,10 +65,10 @@ class VirPiano():
             frame = cv2.resize(frame, (self.shape[0],self.shape[1]))
             frame = cv2.flip(frame, 1)
 
-            while self.piano_config:
+            while self.piano_config==1:
                 self.pts=piano_configuration(self.model_path,self.shape,self.piano_config_threshold)
-                self.piano_keyboard=Piano(self.pts,self.num_octaves)
-                self.piano_config=False
+                self.piano_keyboard=Piano(self.pts,self.num_octaves,self.height_and_width_black)
+                self.piano_config=0
                 cap=cv2.VideoCapture(0)
 
             self.image=frame.copy()
@@ -122,4 +125,23 @@ class VirPiano():
         cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    vp=VirPiano()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model_path', default='model/hand_landmarker.task')
+    parser.add_argument('--num_octaves', default=2, type=int)
+    parser.add_argument('--list_of_octaves', default=[3,4], type=ast.literal_eval)
+    parser.add_argument('--height_and_width_black', default=[[5,8],[5,8]], type=ast.literal_eval)
+    parser.add_argument('--shape', default=(800,600,3), type=ast.literal_eval)
+    parser.add_argument('--tap_threshold', default=20, type=int)
+    parser.add_argument('--piano_config_threshold', default=30, type=int)
+    parser.add_argument('--piano_config', default=1,type=int)
+
+    args = parser.parse_args()
+
+
+    vp=VirPiano(model_path=args.model_path,num_octaves=args.num_octaves,list_of_octaves=args.list_of_octaves,height_and_width_black=args.height_and_width_black,shape=args.shape,tap_threshold=args.tap_threshold,piano_config_threshold=args.piano_config_threshold,piano_config=args.piano_config)
+
+    #cli for running the file is
+    # python main.py --model_path "model/hand_landmarker.task" --num_octaves 2 --list_of_octaves "[3,4]" --height_and_width_black "[[5,8],[5,8]]" --shape "(800,600,3)" --tap_threshold 20 --piano_config_threshold 30 --piano_config 1
+    # or
+    # python main.py

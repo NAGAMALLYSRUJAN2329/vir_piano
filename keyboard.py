@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 class Piano():
-    def __init__(self,pts,num_octaves,height_and_width=[[5,8],[5,8]]):
+    def __init__(self,pts,num_octaves,height_and_width):
         self.pts=pts
         self.num_octaves=num_octaves
         self.white=[]
