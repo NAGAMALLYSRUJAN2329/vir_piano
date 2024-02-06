@@ -5,7 +5,7 @@
 This project implements a virtual piano using OpenCV and Mediapipe, allowing users to play music by interacting with their hands in front of a camera. The application detects hand keypoints using Mediapipe's Hand module and maps them to corresponding piano keys on the screen.
 
 ## Demo Video
-[Virtual Piano Demo](demo/demo_video.mp4)
+[Virtual Piano Demo](demo/final_demo.mp4)
 <!-- https://github.com/NAGAMALLYSRUJAN2329/vir_piano/assets/118573078/ab7de956-1eed-4572-b31f-2a1fe92d8d00 -->
 
 ## Getting Started
