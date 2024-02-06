@@ -58,6 +58,19 @@ streamlit run streamlit_main.py
 - If there is no hand tracking, try adjusting the camera settings and lighting conditions and try to move the hand slowly in front of the camera.
 - Ensure that your Python environment meets the specified requirements.
 
+## Contributers
+[NAGAMALLYSRUJAN2329](https://github.com/NAGAMALLYSRUJAN2329)
+<br/>
+[Prachi-0205](https://github.com/Prachi-0205)
+<br/>
+[Prkhar05](https://github.com/Prkhar05)
+<br/>
+[xenom2004](https://github.com/xenom2004)
+
+
+
+
+
 ## Contributing
 Contributions are welcome!
 
