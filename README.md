@@ -4,8 +4,9 @@
 
 This project implements a virtual piano using OpenCV and Mediapipe, allowing users to play music by interacting with their hands in front of a camera. The application detects hand keypoints using Mediapipe's Hand module and maps them to corresponding piano keys on the screen.
 
-## Demo 
-https://github.com/NAGAMALLYSRUJAN2329/vir_piano/assets/118573078/ab7de956-1eed-4572-b31f-2a1fe92d8d00
+## Demo Video
+[Virtual Piano Demo](demo/demo_video.mp4)
+<!-- https://github.com/NAGAMALLYSRUJAN2329/vir_piano/assets/118573078/ab7de956-1eed-4572-b31f-2a1fe92d8d00 -->
 
 ## Getting Started
 
@@ -30,7 +31,7 @@ conda activate VirPiano
 pip install -r requirements.txt
 ```
 
-- Usage
+#### Local setup
 
 ```
 python main.py
@@ -41,14 +42,20 @@ python main.py --model_path "model/hand_landmarker.task" --num_octaves 2 --list_
 ```
 
 
-### Controls
+##### Controls
 - **Quit**: Press 'Q' key.
+
+#### For Streamlit Interface
+
+```
+streamlit run streamlit_main.py
+```
+
 
 
 ## Troubleshooting
-- If the hand tracking is inaccurate, try adjusting the camera settings and lighting conditions.
+- If there is no hand tracking, try adjusting the camera settings and lighting conditions and try to move the hand slowly in front of the camera.
 - Ensure that your Python environment meets the specified requirements.
-
 
 ## Contributing
 Contributions are welcome!
