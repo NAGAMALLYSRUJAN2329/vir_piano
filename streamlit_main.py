@@ -153,8 +153,6 @@ if __name__ == "__main__":
 
     stop_button=st.button("Stop Playing")
     if not stop_button:
-        # num_octaves=4
-        # list_of_octaves=[3,4,5,6]
         vp=VirPiano(num_octaves=num_octaves,list_of_octaves=list_of_octaves,height_and_width_black=height_and_width_black,tap_threshold=tap_threshold,piano_config_threshold=piano_config_threshold,piano_config=piano_config)
     else:
         st.stop()
