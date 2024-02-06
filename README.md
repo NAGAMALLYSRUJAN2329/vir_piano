@@ -11,8 +11,6 @@ This project implements a virtual piano using OpenCV and Mediapipe, allowing use
 
 ### Installation
 
-1. Clone the repository:
-
 - Clone the repository
 ```
 git clone https://github.com/NAGAMALLYSRUJAN2329/vir_piano.git
@@ -32,7 +30,7 @@ conda activate VirPiano
 pip install -r requirements.txt
 ```
 
-2. Usage:
+- Usage
 
 ```
 python main.py
