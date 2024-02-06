@@ -7,6 +7,7 @@ This project implements a virtual piano using OpenCV and Mediapipe, allowing use
 ## Demo Video
 [Virtual Piano Demo](demo/final_demo.mp4)
 <!-- https://github.com/NAGAMALLYSRUJAN2329/vir_piano/assets/118573078/ab7de956-1eed-4572-b31f-2a1fe92d8d00 -->
+https://github.com/NAGAMALLYSRUJAN2329/vir_piano/assets/129930232/7337adc2-70d1-4739-9d63-76f7401ebf8c
 
 ## Getting Started
 
