@@ -129,7 +129,8 @@ class VirPiano():
 
 if __name__ == "__main__":
     st.title("Virtual Piano")
-
+    st.set_option('server.headless', True)
+    
     col1,col2 = st.columns(2)
     with col1:
         num_octaves = st.slider("Number of octaves:", min_value=1, max_value=7, value=2,step=1)
